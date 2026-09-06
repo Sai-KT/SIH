@@ -86,6 +86,8 @@ class TestInspectionAPI(unittest.TestCase):
         mock_get_supabase.return_value = mock_supabase
 
         response = self.client.post("/api/v1/inspections", json={"location": "Pune"})
+        self.assertEqual(response.status_code, 500)
+        self.assertIn("Database error while creating inspection", response.json()["detail"])
 
     def test_create_inspection_rejects_numeric_location(self):
         # Sending numeric value 12345 should fail with 422 Unprocessable Entity
@@ -97,6 +99,83 @@ class TestInspectionAPI(unittest.TestCase):
         # Sending float value 99.99 should also fail with 422
         response_float = self.client.post("/api/v1/inspections", json={"location": 99.99})
         self.assertEqual(response_float.status_code, 422)
+
+    @patch("app.api.inspections.get_supabase_client")
+    def test_get_inspection_by_id_success(self, mock_get_supabase):
+        test_id = "7b8e5c2b-6c4a-4a8e-9d2a-123456789abc"
+        expected_record = {
+            "id": test_id,
+            "product_id": None,
+            "inspector_id": None,
+            "status": "UPLOADED",
+            "compliance_score": None,
+            "location": "Pune",
+            "inspection_date": "2026-09-06T16:30:00Z",
+            "created_at": "2026-09-06T16:30:00Z",
+        }
+
+        mock_supabase = MagicMock()
+        mock_table = MagicMock()
+        mock_select = MagicMock()
+        mock_eq = MagicMock()
+        mock_execute = MagicMock()
+
+        mock_execute.data = [expected_record]
+        mock_eq.execute.return_value = mock_execute
+        mock_select.eq.return_value = mock_eq
+        mock_table.select.return_value = mock_select
+        mock_supabase.table.return_value = mock_table
+        mock_get_supabase.return_value = mock_supabase
+
+        response = self.client.get(f"/api/v1/inspections/{test_id}")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), expected_record)
+
+        mock_table.select.assert_called_once_with("*")
+        mock_select.eq.assert_called_once_with("id", test_id)
+
+    @patch("app.api.inspections.get_supabase_client")
+    def test_get_inspection_by_id_not_found(self, mock_get_supabase):
+        test_id = "00000000-0000-0000-0000-000000000000"
+
+        mock_supabase = MagicMock()
+        mock_table = MagicMock()
+        mock_select = MagicMock()
+        mock_eq = MagicMock()
+        mock_execute = MagicMock()
+
+        mock_execute.data = []  # No record found
+        mock_eq.execute.return_value = mock_execute
+        mock_select.eq.return_value = mock_eq
+        mock_table.select.return_value = mock_select
+        mock_supabase.table.return_value = mock_table
+        mock_get_supabase.return_value = mock_supabase
+
+        response = self.client.get(f"/api/v1/inspections/{test_id}")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertIn(f"Inspection with ID '{test_id}' not found.", response.json()["detail"])
+
+    def test_get_inspection_by_id_invalid_uuid(self):
+        # Invalid UUID format should immediately fail at route parameter validation with 422
+        response = self.client.get("/api/v1/inspections/not-a-valid-uuid")
+        self.assertEqual(response.status_code, 422)
+
+    @patch("app.api.inspections.get_supabase_client")
+    def test_get_inspection_by_id_db_failure(self, mock_get_supabase):
+        test_id = "7b8e5c2b-6c4a-4a8e-9d2a-123456789abc"
+
+        mock_supabase = MagicMock()
+        mock_table = MagicMock()
+        mock_table.select.side_effect = Exception("Supabase connection error")
+        mock_supabase.table.return_value = mock_table
+        mock_get_supabase.return_value = mock_supabase
+
+        response = self.client.get(f"/api/v1/inspections/{test_id}")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertIn("Database error while retrieving inspection", response.json()["detail"])
 
 
 if __name__ == "__main__":
