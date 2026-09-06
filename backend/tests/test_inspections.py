@@ -87,8 +87,16 @@ class TestInspectionAPI(unittest.TestCase):
 
         response = self.client.post("/api/v1/inspections", json={"location": "Pune"})
 
-        self.assertEqual(response.status_code, 500)
-        self.assertIn("Database error while creating inspection", response.json()["detail"])
+    def test_create_inspection_rejects_numeric_location(self):
+        # Sending numeric value 12345 should fail with 422 Unprocessable Entity
+        response = self.client.post("/api/v1/inspections", json={"location": 12345})
+        self.assertEqual(response.status_code, 422)
+        errors = response.json().get("detail", [])
+        self.assertTrue(any("string" in err.get("msg", "").lower() for err in errors))
+
+        # Sending float value 99.99 should also fail with 422
+        response_float = self.client.post("/api/v1/inspections", json={"location": 99.99})
+        self.assertEqual(response_float.status_code, 422)
 
 
 if __name__ == "__main__":

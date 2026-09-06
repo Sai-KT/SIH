@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictStr
 
 
 class InspectionCreate(BaseModel):
@@ -10,7 +10,7 @@ class InspectionCreate(BaseModel):
     are automatically populated upon record creation.
     """
 
-    location: Optional[str] = Field(
+    location: Optional[StrictStr] = Field(
         default=None,
         description="Physical retail market, warehouse, or location where the commodity was inspected",
         examples=["Crawford Market, Mumbai, Maharashtra"],
