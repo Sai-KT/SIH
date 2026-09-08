@@ -114,10 +114,18 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       )}
 
       <div className="sidebar-footer">
-        {/* Collapse toggle */}
-        <button className="sidebar-toggle-btn" onClick={onToggle} title="Toggle sidebar">
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
+        {/* Collapse toggle aligned to right corner */}
+        <div className="sidebar-toggle-row">
+          <button
+            type="button"
+            className="sidebar-toggle-btn"
+            onClick={onToggle}
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          </button>
+        </div>
 
         <div className="sidebar-divider" />
 
