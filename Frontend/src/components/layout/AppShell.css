@@ -32,8 +32,9 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 380px;
 }
 
 .app-header-right {

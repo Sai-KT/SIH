@@ -4,8 +4,9 @@
 
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Bell, Search, ChevronRight } from 'lucide-react';
+import { Bell, ChevronRight } from 'lucide-react';
 import { Sidebar } from './Sidebar';
+import { TopSearchBar } from './TopSearchBar';
 import { useAuth } from '../../context/AuthContext';
 import { getInitials } from '../../utils/helpers';
 import './AppShell.css';
@@ -72,11 +73,10 @@ export function AppShell() {
             </nav>
           </div>
 
+          {/* Fully Functional Global Search Bar */}
+          <TopSearchBar />
+
           <div className="app-header-right">
-            {/* Search */}
-            <button className="header-search-btn" title="Search">
-              <Search size={18} />
-            </button>
 
             {/* Notifications */}
             <button

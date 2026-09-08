@@ -2,8 +2,8 @@
 // SIH26034 — Inspections List Page
 // =============================================================================
 
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Plus, RefreshCw, ChevronDown } from 'lucide-react';
 import { inspectionService } from '../services/api';
 import type { Inspection, InspectionStatus, InspectionFilters } from '../types';
@@ -25,9 +25,19 @@ const STATUS_OPTIONS: { label: string; value: InspectionStatus | 'ALL' }[] = [
 
 export function InspectionsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const urlSearch = searchParams.get('search') || '';
+
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<InspectionFilters>({ status: 'ALL', search: '' });
+  const [filters, setFilters] = useState<InspectionFilters>({ status: 'ALL', search: urlSearch });
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null) {
+      setFilters(f => ({ ...f, search: q }));
+    }
+  }, [searchParams]);
 
   const fetchInspections = async () => {
     setLoading(true);
