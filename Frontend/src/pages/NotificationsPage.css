@@ -1,0 +1,76 @@
+/* NotificationsPage.css */
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+}
+
+.notif-item:hover {
+  background: var(--color-gray-50);
+  box-shadow: var(--shadow-sm);
+}
+
+.notif-item--unread {
+  border-color: var(--color-primary-200);
+  background: var(--color-primary-50);
+}
+
+.notif-item--unread:hover {
+  background: #e8f0fb;
+}
+
+.notif-icon-wrap {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-icon--info    { background: var(--color-info-bg); }
+.notif-icon--success { background: var(--color-compliant-bg); }
+.notif-icon--warning { background: var(--color-warning-bg); }
+.notif-icon--error   { background: var(--color-non-compliant-bg); }
+
+.notif-body { flex: 1; min-width: 0; }
+
+.notif-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: 3px;
+}
+
+.notif-message {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 4px;
+}
+
+.notif-time {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.notif-unread-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: var(--space-2);
+}
