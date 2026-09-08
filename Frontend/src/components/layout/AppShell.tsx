@@ -4,9 +4,10 @@
 
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Bell, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { TopSearchBar } from './TopSearchBar';
+import { HeaderNotification } from './HeaderNotification';
 import { useAuth } from '../../context/AuthContext';
 import { getInitials } from '../../utils/helpers';
 import './AppShell.css';
@@ -73,25 +74,27 @@ export function AppShell() {
             </nav>
           </div>
 
-          {/* Fully Functional Global Search Bar */}
-          <TopSearchBar />
+          {/* Search bar + Notification Bell aligned side-by-side */}
+          <div className="app-header-center">
+            <TopSearchBar />
+            <HeaderNotification />
+          </div>
 
           <div className="app-header-right">
-
-            {/* Notifications */}
-            <button
-              className="header-icon-btn"
-              title="Notifications"
-              onClick={() => navigate('/notifications')}
-            >
-              <Bell size={18} />
-              <span className="header-notif-dot" />
-            </button>
-
-            {/* Avatar */}
+            {/* User Profile */}
             {user && (
-              <div className="header-avatar" title={user.name}>
-                {getInitials(user.name)}
+              <div
+                className="header-user-profile"
+                title={`${user.name} (${user.role})`}
+                onClick={() => navigate('/admin/users')}
+              >
+                <div className="header-avatar">
+                  {getInitials(user.name)}
+                </div>
+                <div className="header-user-info">
+                  <span className="header-user-name">{user.name.split(' ')[0]}</span>
+                  <span className="header-user-role">{user.role}</span>
+                </div>
               </div>
             )}
           </div>
