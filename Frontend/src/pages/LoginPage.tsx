@@ -33,7 +33,8 @@ export function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate('/dashboard');
+      const role = demoAccounts.find(u => u.email === email)?.role || 'INSPECTOR';
+      navigate(role === 'INSPECTOR' ? '/officer' : '/dashboard');
     } catch {
       setError('Invalid credentials. Try a demo account below.');
     } finally {
@@ -45,7 +46,7 @@ export function LoginPage() {
     setLoading(true);
     setError('');
     switchRole(acc.role);
-    navigate('/dashboard');
+    navigate(acc.role === 'INSPECTOR' ? '/officer' : '/dashboard');
     setLoading(false);
   };
 
