@@ -6,6 +6,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AppShell } from './components/layout/AppShell';
+import { OfficerShell } from './components/officer/OfficerShell';
 
 // Pages
 import { LoginPage }            from './pages/LoginPage';
@@ -18,6 +19,11 @@ import { AnalyticsPage }        from './pages/AnalyticsPage';
 import { NotificationsPage }    from './pages/NotificationsPage';
 import { UsersPage }            from './pages/admin/UsersPage';
 import { AuditLogsPage }        from './pages/admin/AuditLogsPage';
+
+// Officer Field Pages
+import { OfficerOverviewPage } from './pages/officer/OfficerOverviewPage';
+import { RapidInspectPage }    from './pages/officer/RapidInspectPage';
+import { FieldHistoryPage }    from './pages/officer/FieldHistoryPage';
 
 // ── Protected Route ───────────────────────────────────────────────────────────
 
@@ -44,7 +50,21 @@ function AppRoutes() {
       {/* Public */}
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Protected shell */}
+      {/* ── Officer Field Panel ─────────────────────────────────────────── */}
+      <Route
+        path="/officer"
+        element={
+          <ProtectedRoute>
+            <OfficerShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route index           element={<OfficerOverviewPage />} />
+        <Route path="rapid-inspect" element={<RapidInspectPage />} />
+        <Route path="history"       element={<FieldHistoryPage />} />
+      </Route>
+
+      {/* Protected supervisor/admin shell */}
       <Route
         element={
           <ProtectedRoute>

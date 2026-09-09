@@ -7,7 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ClipboardList, PlusCircle, FileText,
   BarChart3, Bell, Users, ShieldCheck, LogOut, ChevronLeft,
-  ChevronRight, BookOpen,
+  ChevronRight, BookOpen, Zap,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getInitials } from '../../utils/helpers';
@@ -19,6 +19,7 @@ interface NavItem {
   label: string;
   roles?: ('INSPECTOR' | 'SUPERVISOR' | 'ADMIN')[];
   badge?: number;
+  highlight?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -28,6 +29,7 @@ const navItems: NavItem[] = [
   { to: '/reports',      icon: <FileText size={18} />,        label: 'Reports' },
   { to: '/analytics',    icon: <BarChart3 size={18} />,       label: 'Analytics', roles: ['SUPERVISOR', 'ADMIN'] },
   { to: '/notifications', icon: <Bell size={18} />,           label: 'Alerts' },
+  { to: '/officer',      icon: <Zap size={18} />,             label: 'Field Mode', highlight: true },
 ];
 
 const adminItems: NavItem[] = [
@@ -80,7 +82,9 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <NavLink
             key={item.to}
             to={item.to}
-            className={({ isActive }) => `sidebar-item ${isActive ? 'sidebar-item--active' : ''}`}
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? 'sidebar-item--active' : ''} ${item.highlight ? 'sidebar-item--highlight' : ''}`
+            }
             title={collapsed ? item.label : undefined}
           >
             <span className="sidebar-item-icon">{item.icon}</span>

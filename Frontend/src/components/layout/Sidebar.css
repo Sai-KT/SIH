@@ -125,6 +125,29 @@
   border-radius: 0 2px 2px 0;
 }
 
+/* Field Mode highlight — amber accent item */
+.sidebar-item--highlight {
+  color: #F59E0B;
+  border: 1px solid rgba(245,158,11,0.20);
+  background: rgba(245,158,11,0.08);
+  margin-top: var(--space-2);
+}
+
+.sidebar-item--highlight:hover {
+  background: rgba(245,158,11,0.16) !important;
+  color: #FBBF24 !important;
+}
+
+.sidebar-item--highlight.sidebar-item--active {
+  background: rgba(245,158,11,0.20);
+  color: #FBBF24;
+  border-color: rgba(245,158,11,0.40);
+}
+
+.sidebar-item--highlight.sidebar-item--active::before {
+  background: #F59E0B;
+}
+
 .sidebar-item-icon {
   display: flex;
   align-items: center;

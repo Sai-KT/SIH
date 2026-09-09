@@ -359,3 +359,96 @@ export const auditService = {
     return mockAuditLogs;
   },
 };
+
+// ── Officer Field Service ──────────────────────────────────────────────────────
+
+import type { RapidInspectionPayload, OfficerTally, FieldInspectionRecord } from '../types';
+import { mockFieldInspections } from '../mock/data';
+
+// In-memory store for officer's rapid inspections in the current session
+let fieldInspectionsStore: FieldInspectionRecord[] = [...mockFieldInspections];
+
+export const officerService = {
+  /**
+   * Submit a complete rapid-audit record in a single POST.
+   * Falls back to local mock store if the backend is unavailable (offline/spotty signal).
+   */
+  async rapidCreate(payload: RapidInspectionPayload): Promise<FieldInspectionRecord> {
+    try {
+      const serverRecord = await apiFetch<Record<string, unknown>>(
+        '/api/v1/inspections/rapid',
+        {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        },
+      );
+      // Map server response to FieldInspectionRecord shape
+      const record: FieldInspectionRecord = {
+        id: String(serverRecord.id || `fi-${Math.random().toString(36).slice(2, 10)}`),
+        timestamp: String(serverRecord.inspection_date || new Date().toISOString()),
+        product_name: payload.product_name || 'Unknown Product',
+        brand_name: payload.brand_name,
+        vendor_name: payload.vendor_name || 'Unknown Vendor',
+        location: payload.location || 'Unknown Location',
+        status: payload.status as FieldInspectionRecord['status'],
+        compliance_score: payload.compliance_score ?? (payload.violations.length === 0 ? 100 : 60),
+        notice_issued: payload.status === 'NON_COMPLIANT',
+        violations: payload.violations,
+      };
+      fieldInspectionsStore.unshift(record);
+      return record;
+    } catch {
+      // Offline / backend unavailable — store locally
+      await delay(150);
+      const record: FieldInspectionRecord = {
+        id: `fi-${Math.random().toString(36).slice(2, 10)}`,
+        timestamp: new Date().toISOString(),
+        product_name: payload.product_name || 'Unknown Product',
+        brand_name: payload.brand_name,
+        vendor_name: payload.vendor_name || 'Unknown Vendor',
+        location: payload.location || 'Unknown Location',
+        status: payload.status as FieldInspectionRecord['status'],
+        compliance_score: payload.compliance_score ?? (payload.violations.length === 0 ? 100 : 60),
+        notice_issued: payload.status === 'NON_COMPLIANT',
+        violations: payload.violations,
+      };
+      fieldInspectionsStore.unshift(record);
+      return record;
+    }
+  },
+
+  /**
+   * Fetch today's inspection tally for the officer badge counter.
+   * Falls back to computing from local store.
+   */
+  async getDailySummary(inspector_id?: string): Promise<OfficerTally> {
+    try {
+      const params = inspector_id ? `?inspector_id=${encodeURIComponent(inspector_id)}` : '';
+      return await apiFetch<OfficerTally>(`/api/v1/inspections/daily-summary${params}`);
+    } catch {
+      await delay(100);
+      const today = new Date().toISOString().slice(0, 10);
+      const todayRecords = fieldInspectionsStore.filter(r =>
+        r.timestamp.startsWith(today),
+      );
+      return {
+        date: today,
+        total: todayRecords.length,
+        compliant: todayRecords.filter(r => r.status === 'COMPLIANT').length,
+        non_compliant: todayRecords.filter(r => r.status === 'NON_COMPLIANT').length,
+        requires_review: todayRecords.filter(r => r.status === 'REQUIRES_REVIEW').length,
+      };
+    }
+  },
+
+  /** Return today's officer field inspection history (mock). */
+  async getFieldHistory(): Promise<FieldInspectionRecord[]> {
+    await delay(200);
+    return [...fieldInspectionsStore];
+  },
+
+  /** Reset the local session store (used when switching officer profile). */
+  resetSessionStore(): void {
+    fieldInspectionsStore = [...mockFieldInspections];
+  },
+};

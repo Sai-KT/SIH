@@ -160,4 +160,32 @@
   --z-overlay:  300;
   --z-modal:    400;
   --z-toast:    500;
+  /* ── Officer Field Mode ──────────────────────────────────────────────────── */
+  --officer-bg:              #0b1320;   /* Very dark navy — high contrast outdoors */
+  --officer-surface:         #111d30;
+  --officer-surface-alt:     #162236;
+  --officer-bar-bg:          #0d1929;
+  --officer-border:          rgba(255,255,255,0.10);
+  --officer-border-bright:   rgba(255,255,255,0.20);
+
+  --officer-accent:          #F59E0B;   /* Amber — primary field action */
+  --officer-accent-hover:    #FBBF24;
+  --officer-compliant:       #22C55E;   /* Bright green */
+  --officer-compliant-bg:    rgba(34,197,94,0.15);
+  --officer-compliant-border:rgba(34,197,94,0.40);
+  --officer-violation:       #EF4444;   /* Bright red */
+  --officer-violation-bg:    rgba(239,68,68,0.15);
+  --officer-violation-border:rgba(239,68,68,0.40);
+  --officer-review:          #F59E0B;   /* Amber */
+  --officer-review-bg:       rgba(245,158,11,0.15);
+  --officer-review-border:   rgba(245,158,11,0.40);
+
+  --officer-text-primary:    #f1f5f9;
+  --officer-text-secondary:  #94a3b8;
+  --officer-text-muted:      #64748b;
+
+  --touch-target:            44px;      /* Minimum touch target height */
+  --touch-target-lg:         52px;      /* Large action button height */
+
+  --officer-topbar-height:   60px;
 }

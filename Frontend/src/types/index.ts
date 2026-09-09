@@ -223,3 +223,71 @@ export interface WizardState {
   isAnalyzing: boolean;
   analysisProgress: number;
 }
+
+// ── Officer Field Panel ───────────────────────────────────────────────────────
+
+export type Rule6Status = 'COMPLIANT' | 'VIOLATION' | 'REVIEW' | 'UNCHECKED';
+
+export interface Rule6CheckItem {
+  id: string;                 // e.g. 'rule_6_1_a'
+  rule_ref: string;           // e.g. 'Rule 6(1)(a)'
+  label: string;              // Short label shown on the row
+  description: string;        // Full description of the requirement
+  status: Rule6Status;
+  violation_tag?: string;     // Quick-tag key if violation
+  violation_note?: string;    // Free text if needed
+}
+
+export interface ViolationTag {
+  key: string;
+  label: string;
+  rule_ref: string;
+}
+
+export interface RapidInspectionPayload {
+  location?: string;
+  vendor_name?: string;
+  vendor_id?: string;
+  product_name?: string;
+  brand_name?: string;
+  net_quantity?: string;
+  batch_number?: string;
+  inspector_id?: string;
+  inspector_badge?: string;
+  violations: Array<{
+    rule_ref: string;
+    description: string;
+    tag?: string;
+  }>;
+  status: 'COMPLIANT' | 'NON_COMPLIANT' | 'REQUIRES_REVIEW' | 'UNDER_REVIEW';
+  compliance_score?: number;
+  notes?: string;
+}
+
+export interface OfficerTally {
+  date: string;
+  total: number;
+  compliant: number;
+  non_compliant: number;
+  requires_review: number;
+}
+
+export interface OfficerProfile {
+  badge_number: string;
+  name: string;
+  district: string;
+  inspector_id: string;
+}
+
+export interface FieldInspectionRecord {
+  id: string;
+  timestamp: string;
+  product_name: string;
+  brand_name?: string;
+  vendor_name: string;
+  location: string;
+  status: 'COMPLIANT' | 'NON_COMPLIANT' | 'REQUIRES_REVIEW';
+  compliance_score: number;
+  notice_issued: boolean;
+  violations: Array<{ rule_ref: string; description: string; tag?: string }>;
+}

@@ -1,0 +1,275 @@
+/* =============================================================================
+   SIH26034 — Rule 6 Checklist Styles
+   High-contrast, touch-optimized table for rapid field compliance checking.
+   ============================================================================= */
+
+.r6-checklist {
+  width: 100%;
+  border: 1px solid var(--officer-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-family: var(--font-family);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+
+.r6-header {
+  display: grid;
+  grid-template-columns: 120px 1fr 160px 1fr;
+  background: var(--officer-bar-bg);
+  border-bottom: 1px solid var(--officer-border-bright);
+  padding: var(--space-2) var(--space-3);
+}
+
+.r6-header > div {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--officer-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-1) var(--space-2);
+}
+
+/* ── Body / Rows ─────────────────────────────────────────────────────────────── */
+
+.r6-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.r6-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 160px 1fr;
+  align-items: start;
+  border-bottom: 1px solid var(--officer-border);
+  transition: background var(--transition-fast);
+  cursor: pointer;
+  min-height: var(--touch-target);
+  outline: none;
+}
+
+.r6-row:last-child {
+  border-bottom: none;
+}
+
+.r6-row--selected {
+  background: rgba(245,158,11,0.08) !important;
+  box-shadow: inset 3px 0 0 var(--officer-accent);
+}
+
+.r6-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.r6-row:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--officer-accent);
+}
+
+/* Status-tinted row backgrounds */
+.r6-row--compliant {
+  background: var(--officer-compliant-bg);
+}
+
+.r6-row--violation {
+  background: var(--officer-violation-bg);
+}
+
+.r6-row--review {
+  background: var(--officer-review-bg);
+}
+
+/* Cells */
+
+[role="gridcell"] {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--space-1);
+}
+
+/* ── Rule ref ───────────────────────────────────────────────────────────────── */
+
+.r6-rule-ref {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  font-family: var(--font-mono);
+  color: var(--officer-accent);
+  background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* ── Label + description ────────────────────────────────────────────────────── */
+
+.r6-col-label {
+  gap: 3px;
+}
+
+.r6-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--officer-text-primary);
+  line-height: var(--leading-tight);
+}
+
+.r6-desc {
+  font-size: var(--text-xs);
+  color: var(--officer-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.r6-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  background: var(--officer-violation-bg);
+  border: 1px solid var(--officer-violation-border);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  color: var(--officer-violation);
+  align-self: flex-start;
+}
+
+/* ── Status button ──────────────────────────────────────────────────────────── */
+
+.r6-col-status {
+  align-items: center;
+  flex-direction: row;
+}
+
+.r6-status-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+  min-height: var(--touch-target);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.r6-status-btn--compliant {
+  color: var(--officer-compliant);
+  background: var(--officer-compliant-bg);
+  border-color: var(--officer-compliant-border);
+}
+
+.r6-status-btn--violation {
+  color: var(--officer-violation);
+  background: var(--officer-violation-bg);
+  border-color: var(--officer-violation-border);
+}
+
+.r6-status-btn--review {
+  color: var(--officer-review);
+  background: var(--officer-review-bg);
+  border-color: var(--officer-review-border);
+}
+
+.r6-status-btn--unchecked {
+  color: var(--officer-text-muted);
+  background: rgba(255,255,255,0.04);
+  border-color: var(--officer-border);
+}
+
+.r6-status-btn:hover {
+  filter: brightness(1.15);
+  transform: scale(1.02);
+}
+
+.r6-status-icon {
+  flex-shrink: 0;
+}
+
+.r6-status-icon.r6-status-compliant { color: var(--officer-compliant); }
+.r6-status-icon.r6-status-violation { color: var(--officer-violation); }
+.r6-status-icon.r6-status-review    { color: var(--officer-review); }
+.r6-status-icon.r6-status-unchecked { color: var(--officer-text-muted); }
+
+/* ── Violation tags ──────────────────────────────────────────────────────────── */
+
+.r6-col-tags {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--space-1);
+}
+
+.r6-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.r6-violation-tag {
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--officer-border);
+  border-radius: var(--radius-full);
+  color: var(--officer-text-secondary);
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.r6-violation-tag:hover {
+  background: var(--officer-violation-bg);
+  border-color: var(--officer-violation-border);
+  color: var(--officer-violation);
+}
+
+.r6-violation-tag.active {
+  background: var(--officer-violation-bg);
+  border-color: var(--officer-violation);
+  color: var(--officer-violation);
+  font-weight: var(--font-bold);
+}
+
+.r6-tags-placeholder {
+  color: var(--officer-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* ── Responsive: collapse tags on mobile ────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .r6-header,
+  .r6-row {
+    grid-template-columns: 100px 1fr 140px;
+  }
+
+  .r6-col-tags { display: none; }
+  .r6-header > div:last-child { display: none; }
+}
+
+@media (max-width: 600px) {
+  .r6-header,
+  .r6-row {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .r6-col-status { display: none; }
+  .r6-header > div:nth-child(3) { display: none; }
+
+  .r6-status-btn span { display: none; }
+}
